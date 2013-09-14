@@ -8,8 +8,6 @@ package client;
  *
  * @author rao
  */
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,7 +24,8 @@ import taskObjects.Task;
 public class SimpleTcpClient {
 	
 
-    public static void main(String args[]) throws ClassNotFoundException  {
+    @SuppressWarnings("unchecked")
+	public static void main(String args[]) throws ClassNotFoundException  {
         try {
             // IP address of the server,
             InetAddress serverAddress = InetAddress.getByName("localhost");

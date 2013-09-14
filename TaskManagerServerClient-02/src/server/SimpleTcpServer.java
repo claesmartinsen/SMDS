@@ -149,7 +149,10 @@ public class SimpleTcpServer {
 
     }
     
-    private static void PrintStudentObject(Task student) 
+    
+    //Test
+    @SuppressWarnings("unused")
+	private static void PrintStudentObject(Task student) 
     {
         try {
 
@@ -173,7 +176,8 @@ public class SimpleTcpServer {
 
     }
     
-    private static void SaveFile(String xml, String path) throws IOException {
+    @SuppressWarnings("unused")
+	private static void SaveFile(String xml, String path) throws IOException {
 
 
         File file = new File(path);
