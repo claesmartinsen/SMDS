@@ -6,7 +6,7 @@ package client;
 
 /**
  *
- * @author rao
+ * @author Lauge Djuraas (ladj), Claes Martinsen (clae), Christian Ole Kirschberg (colk), Eskandar Pahlavan Afshari(epaa)
  */
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,63 +18,63 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import taskObjects.ClientCall;
+import taskObjects.FunctionName;
 import taskObjects.ServerResponse;
 import taskObjects.Task;
 
 public class SimpleTcpClient {
-	
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public static void main(String args[]) throws ClassNotFoundException  {
+		ClientCall ccGet = new ClientCall(FunctionName.GET, "student-02");
+		ServerResponse srGet = startClient(ccGet);
+				
+		// Print the message.
+        System.out.println("Message from Server: " + srGet.getMessage());
+        for(Task t : (List<Task>) srGet.getObject()) 
+        	System.out.println(t.ToString());
+        
+//        ClientCall ccPut = new ClientCall("PUT", "student-02");
+//		Task task = new Task();
+//        ServerResponse srPut = startClient(ccPut);
+//		System.out.println(srPut.getMessage());
+		
+    }
+    
+    public static ServerResponse startClient(ClientCall cc) throws ClassNotFoundException{
+    		System.out.println("Starting client");
         try {
-            // IP address of the server,
-            InetAddress serverAddress = InetAddress.getByName("localhost");
+            InetAddress serverAddress = InetAddress.getByName("localhost"); // IP address of the server,
             
-            // It is the same port where server will be listening.
-            int serverPort = 7896;
-            
-            
-            
-            
-            
-            // Open a socket for communication.
-            Socket socket = new Socket(serverAddress, serverPort);
+            int serverPort = 7896; // It is the same port where server will be listening.
+           
+            Socket socket = new Socket(serverAddress, serverPort); // Open a socket for communication.
                 
-            //Call GET function
-            String messageFunction = "GET";
-            String attendant = "student-02";
-            
-            ClientCall cc = new ClientCall(messageFunction, attendant);
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(cc);
             oos.flush();
-            
-                        
+                    
             // Now switch to listening mode for receiving message from server.
+            
+            //TODO confirm clientcall.
+            
+            
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             
+            System.out.println("Client is waiting for server response");
            // Note that this is a blocking call,  
             ServerResponse sr =  (ServerResponse) ois.readObject();
             
-            
-            // Print the message.
-            System.out.println("Message from Server: " + sr.getMessage());
-            
-            for(Task t : (List<Task>) sr.getObject()) 
-            	System.out.println(t.ToString());
-            
-            
-            
-            
             // Finnaly close the socket. 
             socket.close();
+            
+            return sr;
             
         } catch (IOException ex) {
             Logger.getLogger(SimpleTcpClient.class.getName()).log(Level.SEVERE, null, ex);
             
             System.out.println("error message: " + ex.getMessage());
-        } 
-        
-        
+            return null;
+        }
     }
 }

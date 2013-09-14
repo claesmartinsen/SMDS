@@ -8,15 +8,27 @@ public class ClientCall implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String functionName;
+	private FunctionName functionName;
 	private String parameter;
+	private Task task;
 	
-	public ClientCall(String methodName, String parameter){
-		this.functionName = methodName;
+	public ClientCall(FunctionName functionName, String parameter){
+		this.functionName = functionName;
 		this.parameter = parameter;
 	}
 	
-	public String getFunctionName(){
+	public ClientCall(FunctionName functionName, String parameter, Task task){
+		this.functionName = functionName;
+		this.parameter = parameter;
+		this.task = task;
+	}
+	
+	public Task getTask(){
+		if(task != null) return this.task;
+		else return null;
+	}
+	
+	public FunctionName getFunctionName(){
 		return this.functionName;
 	}
 	

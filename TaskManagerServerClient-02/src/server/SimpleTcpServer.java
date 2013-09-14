@@ -47,7 +47,8 @@ public class SimpleTcpServer {
 
             InputStream is = socket.getInputStream(); // Get the inputstream to receive data sent by client.
             // based on the type of data we want to read, we will open suitbale input stream.  
-            //DataInputStream dis = new DataInputStream(is);            
+            //TODO confirm clientcall
+            
             
             ObjectInputStream ois = new ObjectInputStream(is);
             // Read the String data sent by client at once using readUTF,
@@ -55,20 +56,31 @@ public class SimpleTcpServer {
             
             ClientCall cc = (ClientCall) ois.readObject(); // blocking call
         
-            String functionName = cc.getFunctionName();
-            
-            switch(functionName)
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        
+            switch(cc.getFunctionName())
             {
-            case "GET": 
-                
+            case GET: 
             	// Now the server switches to output mode delivering some message to client.
-            	ServerResponse sr = new ServerResponse("Sucess", (Serializable) GET(cc.getParameter()));
-            	
-            	ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            	outputStream.writeObject(sr);
+            	outputStream.writeObject(new ServerResponse("Sucess", (Serializable) GET(cc.getParameter())));
+            	System.out.println("GET was invoked");
             	outputStream.flush();
             	break;
+            case PUT:
+            	PUT(cc.getTask());
+            	// Now the server switches to output mode delivering some message to client.
+            	outputStream.writeObject(new ServerResponse("Sucess", null));
+            	outputStream.flush();
+            	break;
+            case DELETE:
+            	break;
+            case POST:
+            	break;
+            
             } 
+            
+            	
+            	
             socket.close();
             serverSocket.close();
             
@@ -78,6 +90,11 @@ public class SimpleTcpServer {
             System.out.println("error message: " + ex.getMessage());
         }
 
+    }
+    
+    public static void PUT(Task task){
+    	
+    
     }
 
     public static List<Task> GET(String attendant) throws IOException
