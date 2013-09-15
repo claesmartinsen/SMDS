@@ -26,6 +26,7 @@ public class SimpleTcpClient {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String args[]) throws ClassNotFoundException  {
+		/*
 		ClientCall ccGet = new ClientCall(FunctionName.GET, "student-02");
 		ServerResponse srGet = startClient(ccGet);
 				
@@ -33,12 +34,13 @@ public class SimpleTcpClient {
         System.out.println("Message from Server: " + srGet.getMessage());
         for(Task t : (List<Task>) srGet.getObject()) 
         	System.out.println(t.ToString());
+        */
         
-//        ClientCall ccPut = new ClientCall("PUT", "student-02");
-//		Task task = new Task();
-//        ServerResponse srPut = startClient(ccPut);
-//		System.out.println(srPut.getMessage());
-		
+		Task task = new Task("42","test task","12-12-2013", "active", "this is a description", "group awesome");
+		ClientCall ccPut = new ClientCall(FunctionName.PUT, "student-02",task);
+        ServerResponse srPut = startClient(ccPut);
+		System.out.println(srPut.getMessage());
+  				
     }
     
     public static ServerResponse startClient(ClientCall cc) throws ClassNotFoundException{

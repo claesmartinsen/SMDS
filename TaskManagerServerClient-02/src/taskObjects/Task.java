@@ -16,7 +16,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "task")
 public class Task implements Serializable {
     
-    /**
+    public Task(String id, String name, String date, String status,
+			String description, String attendants) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.date = date;
+		this.status = status;
+		this.description = description;
+		this.attendants = attendants;
+	}
+    
+    public Task(){}
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2534888777807503057L;

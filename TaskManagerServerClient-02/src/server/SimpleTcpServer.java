@@ -62,12 +62,12 @@ public class SimpleTcpServer {
             {
             case GET: 
             	// Now the server switches to output mode delivering some message to client.
-            	outputStream.writeObject(new ServerResponse("Sucess", (Serializable) GET(cc.getParameter())));
+            	outputStream.writeObject(new ServerResponse("Sucess", (Serializable) get(cc.getParameter())));
             	System.out.println("GET was invoked");
             	outputStream.flush();
             	break;
             case PUT:
-            	PUT(cc.getTask());
+            	put(cc.getTask());
             	// Now the server switches to output mode delivering some message to client.
             	outputStream.writeObject(new ServerResponse("Sucess", null));
             	outputStream.flush();
@@ -92,15 +92,26 @@ public class SimpleTcpServer {
 
     }
     
-    public static void PUT(Task task){
+    public static void put(Task task){
+    	try {
+			Cal cal = getCal();
+			cal.tasks.add(task);
+			saveCal(cal);
+			
+			
+		} catch (JAXBException e) {
+			
+			e.printStackTrace();
+		}
     	
     
     }
 
-    public static List<Task> GET(String attendant) throws IOException
+    public static List<Task> get(String attendant) throws IOException
     {
     	try {
 
+    		/*
     		System.out.println("GET invoked");    
         	Object obj = new Object();
         	
@@ -119,8 +130,10 @@ public class SimpleTcpServer {
             // Create a file input stream for the university Xml.
             //FileInputStream stream = new FileInputStream(path);
 
+    		 */
             // Deserialize task xml into java objects.
-            Cal cal = (Cal) jaxbContext.createUnmarshaller().unmarshal(stream);
+            //Cal cal = (Cal) jaxbContext.createUnmarshaller().unmarshal(stream);
+    		Cal cal = getCal();
 
             // Iterate through the collection of student object and print each student object in the form of Xml to console.
             ListIterator<Task> listIterator = cal.tasks.listIterator();
@@ -132,7 +145,7 @@ public class SimpleTcpServer {
             	if(t.attendants.contains(attendant))	taskList.add(t);
             }
      
-         
+            /*
             // Serialize university object into xml.
             
             StringWriter writer = new StringWriter();
@@ -151,7 +164,7 @@ public class SimpleTcpServer {
             // Finally save the Xml back to the file.
             System.out.println("The path is: " + path);
             //SaveFile(writer.toString(), path);
-
+			*/
             return taskList;
 
         } catch (JAXBException ex) {
@@ -159,12 +172,77 @@ public class SimpleTcpServer {
             Logger.getLogger(SimpleTcpServer.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
-    	
-		
+    }
     
+    private static Cal getCal() throws JAXBException{
+    	System.out.println("GET invoked");    
+    	Object obj = new Object();
+    	
+    	
+    	String xmlPath = "/task-manager-xml.xml";
+    	
+    	System.out.println("Reading XML");
+    	InputStream stream = obj.getClass().getResourceAsStream(xmlPath);
+    	
+    	
+        // create an instance context class, to serialize/deserialize.
+        JAXBContext jaxbContext = JAXBContext.newInstance(Cal.class);
+
+        // Create a file input stream for the university Xml.
+        //FileInputStream stream = new FileInputStream(path);
+
+        // Deserialize task xml into java objects.
+        Cal cal = (Cal) jaxbContext.createUnmarshaller().unmarshal(stream);
+    	return cal;
+    }
+    
+    private static void saveCal(Cal cal) throws JAXBException{
+    	System.out.println("GET invoked");    
+    	Object obj = new Object();
+    	
+    	
+    	String xmlPath = "/task-manager-xml.xml";
+    	// Get path to the university-xml.xml using relative path.
+    	String path = obj.getClass().getResource(xmlPath).getPath();
+    	
+    	
+        // create an instance context class, to serialize/deserialize.
+        JAXBContext jaxbContext = JAXBContext.newInstance(Cal.class);
+
+        // Create a file input stream for the university Xml.
+        //FileInputStream stream = new FileInputStream(path);
+
+        // Deserialize task xml into java objects.
+        
+
+        // Iterate through the collection of student object and print each student object in the form of Xml to console.
+     
+        // Serialize university object into xml.
+        
+        StringWriter writer = new StringWriter();
+
+        // We can use the same context object, as it knows how to 
+        //serialize or deserialize University class.
+        jaxbContext.createMarshaller().marshal(cal, writer);
+
+        
+        System.out.println("Printing serialized university Xml before saving into file!");
+        
+        // Print the serialized Xml to Console.
+        //System.out.println(writer.toString());
+        
+        System.out.println("trying to save to xml");
+        // Finally save the Xml back to the file.
+        System.out.println("The path is: " + path);
+        try {
+			SaveFile(writer.toString(), path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
+    
     
     
     //Test
