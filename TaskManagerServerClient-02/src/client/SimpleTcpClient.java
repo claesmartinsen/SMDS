@@ -23,9 +23,8 @@ import taskObjects.ServerResponse;
 import taskObjects.Task;
 
 public class SimpleTcpClient {
-
-	@SuppressWarnings("unchecked")
 	public static void main(String args[]) throws ClassNotFoundException  {
+		
 		/*
 		ClientCall ccGet = new ClientCall(FunctionName.GET, "student-02");
 		ServerResponse srGet = startClient(ccGet);
@@ -35,12 +34,17 @@ public class SimpleTcpClient {
         for(Task t : (List<Task>) srGet.getObject()) 
         	System.out.println(t.ToString());
         */
-        
+        /*
 		Task task = new Task("42","test task","12-12-2013", "active", "this is a description", "group awesome");
 		ClientCall ccPut = new ClientCall(FunctionName.PUT, "student-02",task);
         ServerResponse srPut = startClient(ccPut);
 		System.out.println(srPut.getMessage());
-  				
+  		*/	
+        
+        ClientCall ccDelete = new ClientCall(FunctionName.DELETE, "42");
+        ServerResponse srDelete = startClient(ccDelete);
+        System.out.println("delete = " + srDelete.getMessage());
+        
     }
     
     public static ServerResponse startClient(ClientCall cc) throws ClassNotFoundException{
@@ -59,7 +63,6 @@ public class SimpleTcpClient {
             // Now switch to listening mode for receiving message from server.
             
             //TODO confirm clientcall.
-            
             
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             
