@@ -20,6 +20,10 @@ public class ServerResponse implements Serializable{
 		this.object = object;
 	}
 	
+	public ServerResponse(String message){
+		this.message = message;
+	}
+	
 	public String getMessage(){
 		return this.message;
 	}

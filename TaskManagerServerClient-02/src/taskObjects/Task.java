@@ -61,7 +61,6 @@ public class Task implements Serializable {
     			"\n Description " + description +
     			"\n Date: " + date +
     			"\n Status: " + status
-    			;
-    	
+    			;	
     }
 }

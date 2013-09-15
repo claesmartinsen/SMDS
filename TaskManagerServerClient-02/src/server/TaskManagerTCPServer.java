@@ -20,7 +20,7 @@ import taskObjects.ClientCall;
 import taskObjects.ServerResponse;
 import taskObjects.Task;
 
-public class SimpleTcpServer {
+public class TaskManagerTCPServer {
 
 	private static String xmlPath = "/task-manager-xml.xml";
 
@@ -72,6 +72,9 @@ public class SimpleTcpServer {
 				outputStream.flush();
 				break;
 			case POST:
+				post(cc.getTask());
+				outputStream.writeObject(new ServerResponse("success", null));
+				outputStream.flush();
 				break;
 
 			} 
@@ -79,12 +82,35 @@ public class SimpleTcpServer {
 			serverSocket.close();
 
 		} catch (IOException ex) {
-			Logger.getLogger(SimpleTcpServer.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(TaskManagerTCPServer.class.getName()).log(Level.SEVERE, null, ex);
 
 			System.out.println("error message: " + ex.getMessage());
 		}
 	}
 
+	public static void post(Task task){
+		try {
+			Cal cal = getCal();
+
+			ListIterator<Task> allTasks = cal.tasks.listIterator();
+			while(allTasks.hasNext())
+				if(allTasks.next().id.equals(task.id)) {
+					allTasks.remove();
+				}
+			cal.tasks.add(task);
+			/*//Copy iterator elements to a list to besaved th the cal.
+			List<Task> listToCal = new ArrayList<Task>(); 
+			allTasks.
+			while(allTasks.hasNext()) {
+				listToCal.add(allTasks.next());
+			}
+
+			cal.tasks = listToCal;*/
+			saveCal(cal);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void delete(String id) {
 		try{
@@ -103,8 +129,6 @@ public class SimpleTcpServer {
 		} catch (JAXBException e){
 			e.printStackTrace();
 		}
-
-
 	}
 
 	public static void put(Task task){
@@ -120,23 +144,22 @@ public class SimpleTcpServer {
 
 	public static List<Task> get(String attendant) throws IOException
 	{
+		List<Task> taskList = getAllTasks();
+		List<Task> filteredTasks = new ArrayList<Task>();
+		for(Task t : taskList){
+			if(t.attendants.contains(attendant)) filteredTasks.add(t);
+		}
+		return filteredTasks;
+	}
+
+	private static List<Task> getAllTasks(){
 		try {
 			Cal cal = getCal();
-
-			// Iterate through the collection of task objects.
-			ListIterator<Task> listIterator = cal.tasks.listIterator();
-
-			List<Task> tasks = new ArrayList<Task>();
-			while (listIterator.hasNext()) 
-			{
-				Task t = listIterator.next();
-				if(t.attendants.contains(attendant))	tasks.add(t);
-			}     
-			return tasks;
-
-		} catch (JAXBException ex) {
-			System.out.println("something went wrong!!!");
-			Logger.getLogger(SimpleTcpServer.class.getName()).log(Level.SEVERE, null, ex);
+			List<Task> allTasks = cal.tasks;
+			return allTasks;
+		} catch (JAXBException e) {
+			System.out.println("getAll method couldn+t proceed" + "\n");
+			e.printStackTrace();
 			return null;
 		}
 	}

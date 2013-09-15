@@ -22,7 +22,7 @@ import taskObjects.FunctionName;
 import taskObjects.ServerResponse;
 import taskObjects.Task;
 
-public class SimpleTcpClient {
+public class TaskManagerTCPClient {
 	public static void main(String args[]) throws ClassNotFoundException  {
 		
 		/*
@@ -39,11 +39,19 @@ public class SimpleTcpClient {
 		ClientCall ccPut = new ClientCall(FunctionName.PUT, "student-02",task);
         ServerResponse srPut = startClient(ccPut);
 		System.out.println(srPut.getMessage());
-  		*/	
-        
+  		*/
+        /*
         ClientCall ccDelete = new ClientCall(FunctionName.DELETE, "42");
         ServerResponse srDelete = startClient(ccDelete);
         System.out.println("delete = " + srDelete.getMessage());
+        */
+        
+		
+		Task task1 = new Task("qualify-for-exam","test task","12-12-2013", "expired", "this is a description", "group awesome");
+		
+        ClientCall ccPost = new ClientCall(FunctionName.POST, "", task1);
+        ServerResponse srPost = startClient(ccPost);
+        System.out.println(srPost.getMessage());
         
     }
     
@@ -76,7 +84,7 @@ public class SimpleTcpClient {
             return sr;
             
         } catch (IOException ex) {
-            Logger.getLogger(SimpleTcpClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TaskManagerTCPClient.class.getName()).log(Level.SEVERE, null, ex);
             
             System.out.println("error message: " + ex.getMessage());
             return null;
