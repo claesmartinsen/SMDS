@@ -103,8 +103,7 @@ public class TaskManagerTCPServer {
 	}
 
 	public static void delete(String id) {
-		/*
-		 * 
+		
 		try{
 			System.out.println("delete invoked");
 			Cal cal = getCal();
@@ -121,7 +120,7 @@ public class TaskManagerTCPServer {
 		} catch (JAXBException e){
 			e.printStackTrace();
 		}
-		*/
+		
 	}
 
 	public static void put(Task task){
