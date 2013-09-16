@@ -43,27 +43,25 @@ public class TaskManagerTCPServer {
 
 			InputStream is = socket.getInputStream(); // Get the inputstream to receive data sent by client.
 			// based on the type of data we want to read, we will open suitbale input stream.  
-			//TODO confirm clientcall
-
 			ObjectInputStream ois = new ObjectInputStream(is);
-			// Read the String data sent by client at once using readUTF,
-			// Note that read calls also blocking and wont return until we have some data sent by client. 
-
-			ClientCall cc = (ClientCall) ois.readObject(); // blocking call
-
+			
 			ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+			 
+			//Note that read calls also blocking and wont return until we have some data sent by client. 
+			ClientCall cc = (ClientCall) ois.readObject(); // blocking call
+			outputStream.writeObject(cc); //Send back the client call for verification in the client.
 
 			switch(cc.getFunctionName())
 			{
 			case GET: 
 				// Now the server switches to output mode delivering some message to client.
-				outputStream.writeObject(new ServerResponse("Sucess", (Serializable) get(cc.getParameter())));
+				outputStream.writeObject(new ServerResponse("Success", (Serializable) get(cc.getParameter())));
 				outputStream.flush();
 				break;
 			case PUT:
 				put(cc.getTask());
 				// Now the server switches to output mode delivering some message to client.
-				outputStream.writeObject(new ServerResponse("Sucess", null));
+				outputStream.writeObject(new ServerResponse("Success", null));
 				outputStream.flush();
 				break;
 			case DELETE:
@@ -76,10 +74,10 @@ public class TaskManagerTCPServer {
 				outputStream.writeObject(new ServerResponse("success", null));
 				outputStream.flush();
 				break;
-
 			} 
 			socket.close();
 			serverSocket.close();
+			
 
 		} catch (IOException ex) {
 			Logger.getLogger(TaskManagerTCPServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,14 +96,6 @@ public class TaskManagerTCPServer {
 					allTasks.remove();
 				}
 			cal.tasks.add(task);
-			/*//Copy iterator elements to a list to besaved th the cal.
-			List<Task> listToCal = new ArrayList<Task>(); 
-			allTasks.
-			while(allTasks.hasNext()) {
-				listToCal.add(allTasks.next());
-			}
-
-			cal.tasks = listToCal;*/
 			saveCal(cal);
 		} catch (JAXBException e) {
 			e.printStackTrace();
@@ -113,6 +103,8 @@ public class TaskManagerTCPServer {
 	}
 
 	public static void delete(String id) {
+		/*
+		 * 
 		try{
 			System.out.println("delete invoked");
 			Cal cal = getCal();
@@ -129,6 +121,7 @@ public class TaskManagerTCPServer {
 		} catch (JAXBException e){
 			e.printStackTrace();
 		}
+		*/
 	}
 
 	public static void put(Task task){
